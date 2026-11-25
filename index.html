@@ -1064,7 +1064,7 @@
           <span class="callout-icon">🚫</span>
           <div>
             <strong>三条红线，千万别踩：</strong><br/>
-            1）<strong>绝对不要</strong>多人共用同一个家宽 IP 登录各自的 Claude 账号；<br/>
+            1）<strong>绝对不要</strong>用同一个家宽 IP 登录多个不同的 Claude 账号（坚持一号一独享 IP）；<br/>
             2）<strong>绝对不要</strong>直接复制别人的 <code class="inline">ChromeClean-US</code> 文件夹（里面含别人的指纹与登录态）；<br/>
             3）拿到静态 IP 在哪座城市，时区就配哪里的时区——买了美东纽约 IP 却照抄洛杉矶时间，反而会制造异常特征。
           </div>
@@ -1122,7 +1122,7 @@
             <tr>
               <td><strong>Quantity<br/>（购买数量）</strong></td>
               <td><strong>1 Proxy</strong>（1 个）</td>
-              <td>一人一号一独享 IP 足够。<strong>多位同事请各自注册账号分开下单</strong>，避免同一笔订单分到连号相邻 IP（如 <code class="inline">.23</code>、<code class="inline">.24</code>）。</td>
+              <td>个人使用选 1 个独享 IP 即可（坚持“一号一独享 IP”；若自己有多个账号，建议分开下单以避免分到连号相邻 IP，如 <code class="inline">.23</code>、<code class="inline">.24</code>）。</td>
             </tr>
             <tr>
               <td><strong>ISP / 高级选项<br/>（若有显示）</strong></td>
@@ -1521,12 +1521,12 @@
 
           <details class="faq-item" data-cat="原理">
             <summary>
-              <span class="faq-q-left"><span class="faq-cat">原理与风控</span>几个人共用同一个三网优化VPS面板下发的不同订阅，会互相连坐封号吗？</span>
+              <span class="faq-q-left"><span class="faq-cat">原理与风控</span>前置的三网优化VPS负责中转，Claude 服务端会看到中转机的 IP 吗？</span>
               <span class="faq-arrow">▼</span>
             </summary>
             <div class="faq-ans">
-              <p><strong>不会。</strong>三网优化VPS只是加密运输通道，Claude 服务端完全看不到第一跳的中转 IP，它只能看到你们各自购买的第二跳 <strong>独享静态住宅 IP</strong>。</p>
-              <p>只要满足：<strong>每人各自买独立家宽 IP + 各自独立 Claude 账号与支付方式 + 各自独立浏览器目录</strong>，就不会因为共用同一台中转服务器而被关联。唯一需要注意的只是大家约定好不要拿中转线路挂 BT 或下载大文件，避免把中转带宽或月流量耗尽。</p>
+              <p><strong>完全看不到。</strong>三网优化VPS只是底层的加密传输通道，Claude 服务端完全感知不到第一跳的中转 IP，它只能看到第二跳落地的 <strong>个人独享静态住宅 IP</strong>。</p>
+              <p>只要保持 <strong>一号一独享家宽 IP + 独立支付方式 + 独立纯净浏览器目录</strong>，账号环境就是完全隔离且干净的。日常注意不要拿中转线路挂 BT 或跑大流量下载，避免把中转带宽或月流量耗尽即可。</p>
             </div>
           </details>
 
