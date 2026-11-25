@@ -853,6 +853,7 @@
       </a>
       <nav class="top-nav">
         <a href="#arch">原理解析</a>
+        <a href="#iproyal">IPRoyal选型</a>
         <a href="#generator">在线生成器</a>
         <a href="#step-client">代理配置</a>
         <a href="#step-launcher">一键启动</a>
@@ -870,11 +871,12 @@
       <ul class="toc-list">
         <li><a href="#arch"><span class="toc-num">01</span>整套原理与防风控</a></li>
         <li><a href="#prep"><span class="toc-num">02</span>配置前准备工作</a></li>
-        <li><a href="#generator"><span class="toc-num">03</span>个人配置在线生成器</a></li>
-        <li><a href="#step-client"><span class="toc-num">04</span>代理客户端导入覆写</a></li>
-        <li><a href="#step-launcher"><span class="toc-num">05</span>纯净浏览器与脚本</a></li>
-        <li><a href="#checklist"><span class="toc-num">06</span>登号前 30 秒体检</a></li>
-        <li><a href="#faq"><span class="toc-num">07</span>常见问题与解答</a></li>
+        <li><a href="#iproyal"><span class="toc-num">03</span>IPRoyal 家宽选型</a></li>
+        <li><a href="#generator"><span class="toc-num">04</span>个人配置在线生成器</a></li>
+        <li><a href="#step-client"><span class="toc-num">05</span>代理客户端导入覆写</a></li>
+        <li><a href="#step-launcher"><span class="toc-num">06</span>纯净浏览器与脚本</a></li>
+        <li><a href="#checklist"><span class="toc-num">07</span>登号前 30 秒体检</a></li>
+        <li><a href="#faq"><span class="toc-num">08</span>常见问题与解答</a></li>
       </ul>
       <div class="sidebar-box">
         <strong>隐私说明：</strong>本页所有配置均在你的浏览器本地即时生成，<strong>不会上传</strong>你的任何家宽 IP、账号或密码。
@@ -1039,7 +1041,7 @@
             <div class="step-no">2</div>
             <div class="step-body">
               <strong>你自己独享的美国静态住宅代理（ISP）</strong>
-              推荐在 IPRoyal 等平台各自单独购买 1 个美国静态住宅（Static Residential / ISP）代理，拿到 <code class="inline">IP</code>、<code class="inline">HTTP 端口</code>（常见为 12323）、<code class="inline">用户名</code>、<code class="inline">密码</code>，并记下它所在的<strong>美国城市</strong>（用于匹配时区）。
+              在 IPRoyal 各自单独购买 1 个 <strong>ISP Proxies（Static Residential / 静态住宅）</strong>，拿到 <code class="inline">IP</code>、<code class="inline">HTTP 端口</code>（默认 12323）、<code class="inline">用户名</code>、<code class="inline">密码</code>，并记下它所在的<strong>美国城市</strong>（具体买哪个、怎么避坑请直接看下方 <a href="#iproyal">第 03 节 IPRoyal 选型指南</a>）。
             </div>
           </li>
           <li class="step-item">
@@ -1069,17 +1071,108 @@
         </div>
       </section>
 
-      <!-- Section 3: Interactive Generator -->
-      <section class="section" id="generator">
+      <!-- Section 3: IPRoyal ISP Selection Guide -->
+      <section class="section" id="iproyal">
         <div class="sec-head">
           <div class="sec-badge">03</div>
+          <h2>IPRoyal 静态住宅（ISP）选购与提货指南</h2>
+        </div>
+        <p class="sec-desc">
+          第一次进 IPRoyal 后台最容易踩的坑就是<strong>买错代理品类</strong>或<strong>选错协议端口</strong>。下单前花 1 分钟核对下面三步，一次买对不花冤枉钱：
+        </p>
+
+        <h3>3.1 第一关：左侧菜单 4 种产品，只选「ISP」！</h3>
+        <div class="grid-2">
+          <div class="mini-card" style="background: var(--green-soft); border-color: rgba(31,122,82,0.32);">
+            <h4 style="color: var(--green);">✅ 必选：ISP Proxies（Static Residential · 静态住宅）</h4>
+            <p style="color: #164E35;">
+              按<strong>「IP 个数 + 周期」</strong>买断独享（月付仅约 $2.4～$4/个），<strong>订阅期内 IP 永久固定不变</strong>，且<strong>不按 GB 扣流量费</strong>。这是配合本方案固定出口校验、长期稳定养 Claude 账号的<strong>唯一正确选项</strong>。
+            </p>
+          </div>
+          <div class="mini-card" style="background: var(--red-soft); border-color: rgba(192,57,43,0.25);">
+            <h4 style="color: var(--red);">❌ 别买错另外三种（常见踩坑）</h4>
+            <p style="color: #7C2218;">
+              • <strong>Residential（动态住宅）</strong>：按流量收费（约 $7/GB）且 IP 会不断轮换，会直接触发启动脚本熔断拦截！<br/>
+              • <strong>Datacenter（机房代理）</strong>：数据中心 ASN，容易跳验证或风控。<br/>
+              • <strong>Mobile（移动代理）</strong>：昂贵且 IP 动态变化，不适用固定出口。
+            </p>
+          </div>
+        </div>
+
+        <h3>3.2 第二关：下单页面（ISP → Create a new order）推荐配置</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 24%;">下单选项</th>
+              <th style="width: 30%;">推荐选择</th>
+              <th>选型原因与注意事项</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Plan / Duration<br/>（购买时长）</strong></td>
+              <td><strong>30 / 60 / 90 Days</strong><br/><span style="font-size:12px; color:var(--green);">推荐 60 或 90 天档</span></td>
+              <td>周期越长折合单月越便宜；<strong>切勿买 1 Day 测试档</strong>（次日到期换 IP 又要重配，还会增加账号频繁换 IP 的风控记录）。建议开启自动续费或到期前手动续期以保住原 IP。</td>
+            </tr>
+            <tr>
+              <td><strong>Location<br/>（国家与城市）</strong></td>
+              <td>Country: <strong>United States</strong><br/>City: <strong>Los Angeles (CA)</strong></td>
+              <td>首选<strong>美西（加州洛杉矶 / 圣何塞 / 西雅图）</strong>，跨太平洋延迟最低，且完美对应默认太平洋时区 <code class="inline">Pacific Standard Time</code>。若美西缺货，选弗吉尼亚 / 纽约 / 达拉斯 / 芝加哥也完全没问题，记得在第 04 节把时区改为对应的美东/美中即可。</td>
+            </tr>
+            <tr>
+              <td><strong>Quantity<br/>（购买数量）</strong></td>
+              <td><strong>1 Proxy</strong>（1 个）</td>
+              <td>一人一号一独享 IP 足够。<strong>多位同事请各自注册账号分开下单</strong>，避免同一笔订单分到连号相邻 IP（如 <code class="inline">.23</code>、<code class="inline">.24</code>）。</td>
+            </tr>
+            <tr>
+              <td><strong>ISP / 高级选项<br/>（若有显示）</strong></td>
+              <td>优先本土主流宽带运营商</td>
+              <td>如看到 AT&amp;T、Verizon、Frontier、Comcast、Cox、Cogent/ISP 等可优先选；支持支付宝 / 信用卡 / 加密货币付款（结账页有优惠码框可留意官方常规折扣码）。</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3.3 第三关：付款后怎么拿连接参数？（Proxy details）</h3>
+        <ol class="steps">
+          <li class="step-item">
+            <div class="step-no">1</div>
+            <div class="step-body">
+              <strong>确认协议为 HTTP/HTTPS（默认端口 12323）</strong>
+              进入左侧 <code class="inline">ISP</code> → 点击你的活跃订单进入 <strong>Proxy details</strong>，在 <strong>Protocol</strong> 处确认选中 <strong><code class="inline">HTTP/HTTPS</code></strong>（默认分配端口为 <code class="inline">12323</code>；<strong>不要</strong>选成 SOCKS5 的 <code class="inline">12324</code>，本方案链式代理固定走 HTTP 协议）。
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-no">2</div>
+            <div class="step-body">
+              <strong>复制 Formatted Proxy List 一行代理串</strong>
+              在页面下方的代理列表中，直接复制形如 <code class="inline">xxx.xxx.xxx.xxx:12323:用户名:密码</code> 的整行文本，粘贴到下方 <strong>第 04 节「一键粘贴自动识别」</strong> 输入框，4 项参数会自动拆分填好！
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-no">3</div>
+            <div class="step-body">
+              <strong>开箱先验一次 IP 体质（重要习惯）</strong>
+              新开出来的静态 IP <strong>先不要急着登录 Claude</strong>，先配好代理用 <code class="inline">Chrome Clean (US)</code> 打开 <code class="inline">https://ping0.cc</code> 和 <code class="inline">https://scamalytics.com</code>：确认属性为 <strong>ISP / 住宅宽带</strong>、风险/欺诈分低。万一极小概率抽到被前人污染过的高危烂 IP，趁未登号前直接找 IPRoyal 24 小时在线客服免费换新。
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Section 4: Interactive Generator -->
+      <section class="section" id="generator">
+        <div class="sec-head">
+          <div class="sec-badge">04</div>
           <h2>个人专属配置在线生成器（零手敲、防拼错）</h2>
         </div>
         <p class="sec-desc">
-          在下面填入你自己的参数，页面会在浏览器本地实时生成专属的 <code class="inline">mihomo-override.js</code> 和 <code class="inline">config.psd1</code>，支持一键复制或直接下载覆盖。
+          直接把 IPRoyal 后台复制的整行代理串粘到第一格（或手动填写），页面会在浏览器本地实时生成专属的 <code class="inline">mihomo-override.js</code> 和 <code class="inline">config.psd1</code>。
         </p>
 
         <div class="gen-grid">
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="f-raw">⚡ 一键粘贴 IPRoyal 代理串自动识别（可选） <span>支持 ip:port:user:pass 或 http://user:pass@ip:port</span></label>
+            <input id="f-raw" type="text" value="" placeholder="直接粘贴 IPRoyal 复制的那一行，例如：xxx.xxx.xxx.xxx:12323:username:password（自动拆分填入下方四格）" />
+          </div>
           <div class="field">
             <label for="f-ip">你的静态家宽 IP <span>纯 IPv4 地址</span></label>
             <input id="f-ip" type="text" value="" placeholder="例如：xxx.xxx.xxx.xxx" />
@@ -1140,10 +1233,10 @@
         </div>
       </section>
 
-      <!-- Section 4: Proxy Client Setup -->
+      <!-- Section 5: Proxy Client Setup -->
       <section class="section" id="step-client">
         <div class="sec-head">
-          <div class="sec-badge">04</div>
+          <div class="sec-badge">05</div>
           <h2>第一步：在代理客户端导入三网优化VPS订阅并启用 JS 覆写</h2>
         </div>
         <p class="sec-desc">根据你电脑安装的客户端切换下方标签，照着点就行（约 2 分钟）：</p>
@@ -1173,7 +1266,7 @@
               <div class="step-no">3</div>
               <div class="step-body">
                 <strong>粘贴全局扩展脚本（关键一步）</strong>
-                回到「订阅」页底部，找到「全局扩展脚本」→ 右键点击「编辑文件」→ 全选替换为你在 <strong>第 03 节生成的 <code class="inline">mihomo-override.js</code></strong> → 保存。
+                回到「订阅」页底部，找到「全局扩展脚本」→ 右键点击「编辑文件」→ 全选替换为你在 <strong>第 04 节生成的 <code class="inline">mihomo-override.js</code></strong> → 保存。
               </div>
             </li>
             <li class="step-item">
@@ -1206,7 +1299,7 @@
               <div class="step-no">3</div>
               <div class="step-body">
                 <strong>新建并启用 JS 覆写</strong>
-                打开「覆写」→ 新建「JavaScript」类型覆写 → 粘贴 <strong>第 03 节生成的 <code class="inline">mihomo-override.js</code></strong> 并保存 → 在订阅卡片的覆写设置中勾选启用该脚本。
+                打开「覆写」→ 新建「JavaScript」类型覆写 → 粘贴 <strong>第 04 节生成的 <code class="inline">mihomo-override.js</code></strong> 并保存 → 在订阅卡片的覆写设置中勾选启用该脚本。
               </div>
             </li>
             <li class="step-item">
@@ -1228,17 +1321,17 @@
         </div>
       </section>
 
-      <!-- Section 5: Chrome & Launcher -->
+      <!-- Section 6: Chrome & Launcher -->
       <section class="section" id="step-launcher">
         <div class="sec-head">
-          <div class="sec-badge">05</div>
+          <div class="sec-badge">06</div>
           <h2>第二步：部署纯净浏览器与桌面一键启动脚本</h2>
         </div>
         <p class="sec-desc">
-          先下载 <a href="./ClaudeCleanLauncher.zip" download>ClaudeCleanLauncher.zip</a> 并解压，把第 03 节下载好的 <code class="inline">config.psd1</code> 覆盖放进解压后的文件夹中，然后按下面 3 条命令顺序执行即可：
+          先下载 <a href="./ClaudeCleanLauncher.zip" download>ClaudeCleanLauncher.zip</a> 并解压，把第 04 节下载好的 <code class="inline">config.psd1</code> 覆盖放进解压后的文件夹中，然后按下面 3 条命令顺序执行即可：
         </p>
 
-        <h3>5.1 首次初始化你自己的 Chrome Clean (US)</h3>
+        <h3>6.1 首次初始化你自己的 Chrome Clean (US)</h3>
         <p>在解压出来的 <code class="inline">ClaudeCleanLauncher</code> 文件夹空白处，按住 <code class="inline">Shift</code> 点击鼠标右键 → 选择「在此处打开 PowerShell 窗口（或在终端中打开）」，运行：</p>
         <div class="code-wrap">
           <div class="code-bar">
@@ -1251,7 +1344,7 @@
         </div>
         <p>运行后会弹出一个全新的空白英文 Chrome 窗口。<strong>不要登录国内账号、不要开启浏览器同步、不要装乱七八糟的插件</strong>，直接关闭该窗口即可完成初始化。</p>
 
-        <h3>5.2 一键安装到本机并生成桌面快捷方式</h3>
+        <h3>6.2 一键安装到本机并生成桌面快捷方式</h3>
         <div class="code-wrap">
           <div class="code-bar">
             <span>PowerShell · 自动部署至 %LOCALAPPDATA%\ClaudeCleanLauncher</span>
@@ -1289,7 +1382,7 @@
           </tbody>
         </table>
 
-        <h3>5.3 运行只读预检确认全部绿灯</h3>
+        <h3>6.3 运行只读预检确认全部绿灯</h3>
         <div class="code-wrap">
           <div class="code-bar">
             <span>PowerShell · 不会改时区、不会打开浏览器</span>
@@ -1302,10 +1395,10 @@
         <p>看到绿色提示 <strong><code class="inline">PREFLIGHT PASSED（全部预检通过）</code></strong> 就可以进入最后的 30 秒体检！</p>
       </section>
 
-      <!-- Section 6: Interactive 30s Checklist -->
+      <!-- Section 7: Interactive 30s Checklist -->
       <section class="section" id="checklist">
         <div class="sec-head">
-          <div class="sec-badge">06</div>
+          <div class="sec-badge">07</div>
           <h2>首次登号前 30 秒互动体检清单</h2>
         </div>
         <p class="sec-desc">
@@ -1370,18 +1463,19 @@
         </div>
       </section>
 
-      <!-- Section 7: FAQ -->
+      <!-- Section 8: FAQ -->
       <section class="section" id="faq">
         <div class="sec-head">
-          <div class="sec-badge">07</div>
+          <div class="sec-badge">08</div>
           <h2>常见问题与排障解答（FAQ）</h2>
         </div>
         <p class="sec-desc">遇到报错或不确定某个细节？先按关键词搜索，或按分类筛选查看解决方案：</p>
 
         <div class="faq-controls">
-          <input class="faq-search" id="faq-search" type="search" placeholder="🔍 搜索关键词，如：出口、时区、报错、流量、QUIC、续费..." />
+          <input class="faq-search" id="faq-search" type="search" placeholder="🔍 搜索关键词，如：IPRoyal、选型、出口、时区、报错、流量、续费..." />
           <div class="faq-tags" id="faq-tags">
-            <button type="button" class="faq-tag active" data-cat="all">全部 (12)</button>
+            <button type="button" class="faq-tag active" data-cat="all">全部 (14)</button>
+            <button type="button" class="faq-tag" data-cat="选型">家宽选型</button>
             <button type="button" class="faq-tag" data-cat="原理">原理与风控</button>
             <button type="button" class="faq-tag" data-cat="报错">报错排查</button>
             <button type="button" class="faq-tag" data-cat="日常">日常与维护</button>
@@ -1389,6 +1483,30 @@
         </div>
 
         <div class="faq-list" id="faq-list">
+          <details class="faq-item" data-cat="选型" open>
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">家宽选型</span>IPRoyal 里 ISP 和 Residential 有什么区别？不小心买成 Residential 能用吗？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p><strong>不能混用，务必买左侧菜单的 <code class="inline">ISP</code>（Static Residential）：</strong></p>
+              <ul>
+                <li><strong>ISP（静态住宅）</strong>：按颗买断周期（约 $2.4～$4/月），给你一个<strong>固定不变的独享住宅 IP</strong> 且不限流量，适合长期固定登录同一个 Claude 账号。</li>
+                <li><strong>Residential（动态住宅）</strong>：按 GB 卖流量（约 $7/GB），底层是不断轮换的家宽池，不仅对话传附件烧钱，而且一旦 IP 跳变，桌面「打开 Claude」的固定 IP 校验会立刻报错拦截。</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="选型">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">家宽选型</span>刚买下来的 IPRoyal 静态 IP 怎么看干不干净？怎么续费才不会换 IP？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p><strong>怎么验纯度：</strong>配好代理后，在未登录 Claude 前先用 <code class="inline">Chrome Clean (US)</code> 打开 <code class="inline">https://ping0.cc</code> 和 <code class="inline">https://scamalytics.com</code>。理想状态是：IP 类型显示 <strong>家庭宽带 / ISP（双 ISP）</strong>，Scamalytics 欺诈分（Fraud Score）尽量低（绿色/低风险）。如果一开出来就是极高风险红标，说明前任租户刚拿它干过坏事，直接联系 IPRoyal 右下角在线客服要求换一个干净 IP。</p>
+              <p><strong>怎么保住原 IP：</strong>IPRoyal 的静态 ISP 只要在<strong>到期前续费（Extend）或开启自动续费（Auto-extend）</strong>，原 IP、端口和账号密码都会保持不变；一旦彻底过期释放就找不回来了。</p>
+            </div>
+          </details>
           <details class="faq-item" data-cat="原理" open>
             <summary>
               <span class="faq-q-left"><span class="faq-cat">原理与风控</span>为什么一定要“三网优化VPS 中转 + 家宽落地”两跳？只用中转或只用家宽不行吗？</span>
@@ -1490,7 +1608,7 @@
               <span class="faq-arrow">▼</span>
             </summary>
             <div class="faq-ans">
-              <p>完全没问题！只要保证 <strong>Windows 目标时区与你 IP 所在城市属于同一时区</strong>即可。在本页第 03 节「在线生成器」的地区下拉框里直接选择对应美国区域，或者手动把 <code class="inline">config.psd1</code> 中的 <code class="inline">TargetTzId</code> 改为：</p>
+              <p>完全没问题！只要保证 <strong>Windows 目标时区与你 IP 所在城市属于同一时区</strong>即可。在本页第 04 节「在线生成器」的地区下拉框里直接选择对应美国区域，或者手动把 <code class="inline">config.psd1</code> 中的 <code class="inline">TargetTzId</code> 改为：</p>
               <ul>
                 <li>美西（洛杉矶 / 旧金山 / 西雅图）：<code class="inline">Pacific Standard Time</code></li>
                 <li>山地（丹佛 / 盐湖城）：<code class="inline">Mountain Standard Time</code></li>
@@ -1517,7 +1635,7 @@
               <span class="faq-arrow">▼</span>
             </summary>
             <div class="faq-ans">
-              <p>只需要同步更新 <strong>2 个地方</strong>（建议回到本页第 03 节重新生成一遍最省心）：</p>
+              <p>只需要同步更新 <strong>2 个地方</strong>（建议回到本页第 04 节重新生成一遍最省心）：</p>
               <ol>
                 <li>代理客户端里的 <strong>全局 JS 覆写（<code class="inline">mihomo-override.js</code>）</strong>：更新 <code class="inline">ISP_SERVER</code> / 端口 / 用户名 / 密码并刷新订阅；</li>
                 <li>本机 <strong><code class="inline">%LOCALAPPDATA%\ClaudeCleanLauncher\config.psd1</code></strong>：更新 <code class="inline">ExpectedExitIp</code>（若跨州换了城市，一并更新 <code class="inline">TargetTzId</code>）。</li>
@@ -1550,6 +1668,7 @@
     (function () {
       const $ = (id) => document.getElementById(id);
 
+      const fRaw = $('f-raw');
       const fDialer = $('f-dialer');
       const fTz = $('f-tz');
       const fIp = $('f-ip');
@@ -1559,6 +1678,45 @@
       const outJs = $('out-js');
       const outPsd1 = $('out-psd1');
       const genHint = $('gen-hint');
+
+      // 一键解析 IPRoyal 代理串（支持 ip:port:user:pass 或 [http://]user:pass@ip:port）
+      if (fRaw) {
+        fRaw.addEventListener('input', () => {
+          let raw = (fRaw.value || '').trim();
+          if (!raw) return;
+          raw = raw.replace(/^https?:\/\//i, '').trim();
+          let ip = '', port = '', user = '', pass = '';
+          if (raw.includes('@')) {
+            const atIdx = raw.lastIndexOf('@');
+            const authPart = raw.slice(0, atIdx);
+            const hostPart = raw.slice(atIdx + 1);
+            const c1 = authPart.indexOf(':');
+            const c2 = hostPart.lastIndexOf(':');
+            if (c1 > 0 && c2 > 0) {
+              user = authPart.slice(0, c1);
+              pass = authPart.slice(c1 + 1);
+              ip = hostPart.slice(0, c2);
+              port = hostPart.slice(c2 + 1);
+            }
+          } else {
+            const parts = raw.split(':');
+            if (parts.length >= 4) {
+              ip = parts[0];
+              port = parts[1];
+              user = parts[2];
+              pass = parts.slice(3).join(':');
+            }
+          }
+          if (ip && /^\d+$/.test(port) && user && pass) {
+            fIp.value = ip.trim();
+            fPort.value = port.trim();
+            fUser.value = user.trim();
+            fPass.value = pass.trim();
+            renderGenerator();
+            showToast('已自动识别并填入 4 项家宽参数');
+          }
+        });
+      }
 
       function escJs(s) {
         return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
@@ -1748,6 +1906,7 @@ function main(config) {
       });
 
       $('btn-reset').addEventListener('click', () => {
+        if (fRaw) fRaw.value = '';
         fDialer.value = '';
         fTz.value = 'Pacific Standard Time';
         fIp.value = '';
