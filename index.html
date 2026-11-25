@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude 独享家宽配置指南 · claude.guanjievps.qd.je</title>
+  <meta name="description" content="三网优化VPS 中转 + 美国静态住宅家宽落地 + 纯净 Chrome + 出口熔断与时区联动完整图文使用说明与在线配置生成器。" />
+  <style>
+    :root {
+      --bg: #FAF8F5;
+      --surface: #FFFFFF;
+      --surface-soft: #F4EFE8;
+      --surface-code: #1E1D1B;
+      --border: #E8E1D7;
+      --border-strong: #D6CBB9;
+      --text: #1F1E1C;
+      --text-muted: #615D56;
+      --text-light: #8C867C;
+      --accent: #D97757;
+      --accent-hover: #C26142;
+      --accent-soft: #FDF1EC;
+      --green: #1F7A52;
+      --green-soft: #EBF7F1;
+      --amber: #B26B00;
+      --amber-soft: #FFF7E6;
+      --red: #C0392B;
+      --red-soft: #FDEDEB;
+      --blue: #2563EB;
+      --blue-soft: #EFF6FF;
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 2px 10px rgba(31, 30, 28, 0.045);
+      --shadow-lg: 0 10px 30px rgba(31, 30, 28, 0.07);
+      --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+      --font-mono: "Cascadia Code", "JetBrains Mono", Consolas, "SFMono-Regular", Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(250, 248, 245, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #E28767, #C45D3E);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: 0 3px 10px rgba(217, 119, 87, 0.28);
+    }
+    .brand-domain {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .top-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .top-nav a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 6px 11px;
+      border-radius: 8px;
+      transition: all 0.16s ease;
+    }
+    .top-nav a:hover {
+      color: var(--text);
+      background: var(--surface-soft);
+    }
+    .top-nav a.nav-cta {
+      background: var(--accent);
+      color: #fff;
+    }
+    .top-nav a.nav-cta:hover {
+      background: var(--accent-hover);
+      color: #fff;
+    }
+
+    /* Layout */
+    .page-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 24px 80px;
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Sidebar TOC */
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+      margin: 0 0 10px 8px;
+    }
+    .toc-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .toc-list a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      background: var(--accent-soft);
+      color: var(--accent-hover);
+      font-weight: 600;
+    }
+    .toc-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: var(--surface-soft);
+      color: var(--text-muted);
+      display: inline-grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .toc-list a.active .toc-num {
+      background: var(--accent);
+      color: #fff;
+    }
+    .sidebar-box {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .sidebar-box strong { color: var(--text); }
+
+    /* Main Content */
+    .main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FDF5F0 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 34px 34px 30px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -50px;
+      top: -50px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(217,119,87,0.14) 0%, rgba(217,119,87,0) 70%);
+      pointer-events: none;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 4px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-muted);
+    }
+    .pill.accent {
+      background: var(--accent-soft);
+      border-color: rgba(217,119,87,0.28);
+      color: var(--accent-hover);
+    }
+    .pill.green {
+      background: var(--green-soft);
+      border-color: rgba(31,122,82,0.22);
+      color: var(--green);
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 30px;
+      line-height: 1.28;
+      letter-spacing: -0.02em;
+    }
+    .hero-sub {
+      margin: 0 0 22px;
+      color: var(--text-muted);
+      font-size: 15.5px;
+      max-width: 720px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.16s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(217, 119, 87, 0.25);
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+    .btn-secondary:hover { background: var(--surface-soft); }
+    .btn-sm {
+      font-size: 12.5px;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    /* Stats Strip */
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .hl-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 14px;
+    }
+    .hl-label {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-bottom: 3px;
+    }
+    .hl-val {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Section Cards */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 30px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 76px;
+    }
+    .sec-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .sec-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent-hover);
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 15px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .sec-head h2 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.3;
+    }
+    .sec-desc {
+      margin: -6px 0 18px;
+      color: var(--text-muted);
+      font-size: 14.5px;
+    }
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 16.5px;
+      color: var(--text);
+    }
+    p { margin: 0 0 12px; }
+    ul, ol { margin: 0 0 14px; padding-left: 22px; }
+    li { margin-bottom: 6px; }
+
+    /* Callouts */
+    .callout {
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 14px;
+      border: 1px solid transparent;
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+    }
+    .callout-icon { font-size: 18px; line-height: 1.3; flex-shrink: 0; }
+    .callout.tip { background: var(--green-soft); border-color: rgba(31,122,82,0.2); color: #164E35; }
+    .callout.warn { background: var(--amber-soft); border-color: rgba(178,107,0,0.22); color: #6E4200; }
+    .callout.danger { background: var(--red-soft); border-color: rgba(192,57,43,0.22); color: #7C2218; }
+    .callout.info { background: var(--blue-soft); border-color: rgba(37,99,235,0.2); color: #1E3A8A; }
+    .callout strong { color: inherit; }
+
+    /* Diagram Container */
+    .diagram-box {
+      background: #FCFBF9;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 12px;
+      overflow-x: auto;
+      margin: 14px 0 18px;
+    }
+    .diagram-box svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+
+    /* Comparison Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .mini-card {
+      background: #FCFBF9;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px 16px;
+    }
+    .mini-card h4 {
+      margin: 0 0 6px;
+      font-size: 14.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mini-card p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    /* Interactive Generator */
+    .gen-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      background: #FCFBF9;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .field label span {
+      font-weight: 400;
+      color: var(--text-light);
+      font-size: 12px;
+    }
+    .field input, .field select {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      padding: 9px 12px;
+      border-radius: 9px;
+      border: 1px solid var(--border-strong);
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field select { font-family: var(--font-sans); }
+    .field input:focus, .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
+    }
+    .gen-status {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Code Blocks */
+    .code-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2E2C29;
+      margin: 12px 0 16px;
+      background: var(--surface-code);
+    }
+    .code-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: #2A2826;
+      border-bottom: 1px solid #3A3733;
+      color: #CFC8BC;
+      font-size: 12.5px;
+      font-family: var(--font-mono);
+      gap: 10px;
+    }
+    .code-bar-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .code-btn {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      color: #F4EFE8;
+      background: #3E3B37;
+      border: 1px solid #524E48;
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .code-btn:hover { background: var(--accent); border-color: var(--accent); }
+    pre {
+      margin: 0;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: #F3EFE9;
+      max-height: 360px;
+    }
+    code.inline {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: #A63E1E;
+      padding: 1px 6px;
+      border-radius: 5px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active {
+      color: var(--accent-hover);
+      border-bottom-color: var(--accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Step List */
+    .steps {
+      list-style: none;
+      padding: 0;
+      margin: 14px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .step-item {
+      display: flex;
+      gap: 14px;
+      padding: 14px 16px;
+      background: #FCFBF9;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .step-no {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-body { flex: 1; min-width: 0; }
+    .step-body strong { display: block; margin-bottom: 4px; font-size: 15px; }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px;
+      font-size: 13.5px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--surface-soft);
+      font-weight: 700;
+      color: var(--text);
+    }
+    tr:last-child td { border-bottom: none; }
+
+    /* Interactive Checklist */
+    .progress-bar-wrap {
+      background: var(--surface-soft);
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+      margin: 10px 0 16px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      transition: width 0.25s ease;
+    }
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 15px;
+      background: #FCFBF9;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .check-item:hover { border-color: var(--border-strong); }
+    .check-item.checked {
+      background: var(--green-soft);
+      border-color: rgba(31,122,82,0.3);
+    }
+    .check-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      accent-color: var(--green);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .check-title { font-weight: 700; font-size: 14.5px; }
+    .check-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .ready-banner {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: var(--green);
+      color: #fff;
+      font-weight: 600;
+      font-size: 14.5px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .ready-banner.show { display: flex; }
+
+    /* FAQ */
+    .faq-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .faq-search {
+      flex: 1;
+      min-width: 220px;
+      padding: 9px 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+    .faq-search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(217,119,87,0.14); }
+    .faq-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .faq-tag {
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .faq-tag.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    details.faq-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #FCFBF9;
+      transition: border-color 0.15s;
+    }
+    details.faq-item[open] {
+      background: #fff;
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow);
+    }
+    details.faq-item summary {
+      list-style: none;
+      padding: 14px 18px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    details.faq-item summary::-webkit-details-marker { display: none; }
+    .faq-q-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .faq-cat {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--surface-soft);
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .faq-arrow {
+      font-size: 12px;
+      color: var(--text-light);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    details.faq-item[open] .faq-arrow { transform: rotate(180deg); color: var(--accent); }
+    .faq-ans {
+      padding: 0 18px 16px;
+      color: var(--text-muted);
+      font-size: 14px;
+      border-top: 1px dashed var(--border);
+      padding-top: 12px;
+    }
+    .faq-ans p:last-child, .faq-ans ul:last-child { margin-bottom: 0; }
+
+    /* Footer */
+    footer {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px 24px 48px;
+      text-align: center;
+      color: var(--text-light);
+      font-size: 13px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: #1F1E1C;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 960px) {
+      .page-wrap { grid-template-columns: 1fr; padding: 18px 16px 60px; }
+      .sidebar { display: none; }
+      .highlights { grid-template-columns: repeat(2, 1fr); }
+      .grid-2, .grid-3, .gen-grid { grid-template-columns: 1fr; }
+      .hero { padding: 24px 20px; }
+      .hero h1 { font-size: 24px; }
+      .section { padding: 22px 18px; }
+      .top-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <span class="brand-logo">C</span>
+        <span>Claude 家宽稳定使用指南</span>
+        <span class="brand-domain">claude.guanjievps.qd.je</span>
+      </a>
+      <nav class="top-nav">
+        <a href="#arch">原理解析</a>
+        <a href="#generator">在线生成器</a>
+        <a href="#step-client">代理配置</a>
+        <a href="#step-launcher">一键启动</a>
+        <a href="#checklist">30秒体检</a>
+        <a href="#faq">常见问题</a>
+        <a class="nav-cta" href="./ClaudeCleanLauncher.zip" download>下载启动包</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-wrap" id="top">
+    <!-- Left Sidebar TOC -->
+    <aside class="sidebar">
+      <div class="sidebar-title">指南目录</div>
+      <ul class="toc-list">
+        <li><a href="#arch"><span class="toc-num">01</span>整套原理与防风控</a></li>
+        <li><a href="#prep"><span class="toc-num">02</span>配置前准备工作</a></li>
+        <li><a href="#generator"><span class="toc-num">03</span>个人配置在线生成器</a></li>
+        <li><a href="#step-client"><span class="toc-num">04</span>代理客户端导入覆写</a></li>
+        <li><a href="#step-launcher"><span class="toc-num">05</span>纯净浏览器与脚本</a></li>
+        <li><a href="#checklist"><span class="toc-num">06</span>登号前 30 秒体检</a></li>
+        <li><a href="#faq"><span class="toc-num">07</span>常见问题与解答</a></li>
+      </ul>
+      <div class="sidebar-box">
+        <strong>隐私说明：</strong>本页所有配置均在你的浏览器本地即时生成，<strong>不会上传</strong>你的任何家宽 IP、账号或密码。
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="pill-row">
+          <span class="pill accent">三网优化VPS 专线中转 + 美国静态家宽</span>
+          <span class="pill green">纯本地配置 · 无需软路由</span>
+          <span class="pill">适用 Windows 10 / 11</span>
+        </div>
+        <h1>10 分钟搭好你的「高稳定 Claude 独享环境」</h1>
+        <p class="hero-sub">
+          这套方案把<strong>高速中转（三网优化VPS）</strong>、<strong>独享美国静态住宅 IP（IPRoyal）</strong>、<strong>防泄漏置顶分流</strong>、<strong>独立英文 Chrome</strong> 以及<strong>启动前出口 IP 熔断 + 时区对齐脚本</strong>串成闭环。日常上网不消耗家宽流量，打开 Claude 时自动把风险降到最低。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#generator">⚡ 立即生成我的专属配置</a>
+          <a class="btn btn-secondary" href="./ClaudeCleanLauncher.zip" download>📦 下载 ClaudeCleanLauncher.zip</a>
+          <a class="btn btn-secondary" href="#faq">❓ 直接看常见报错解答</a>
+        </div>
+        <div class="highlights">
+          <div class="hl-card">
+            <div class="hl-label">出口属性</div>
+            <div class="hl-val">每人独享静态家宽</div>
+          </div>
+          <div class="hl-card">
+            <div class="hl-label">家宽流量消耗</div>
+            <div class="hl-val">仅 Claude/风控/支付</div>
+          </div>
+          <div class="hl-card">
+            <div class="hl-label">核心防呆机制</div>
+            <div class="hl-val">IP 不对直接熔断拒启</div>
+          </div>
+          <div class="hl-card">
+            <div class="hl-label">浏览器隔离</div>
+            <div class="hl-val">独立 en-US 纯净目录</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 1: Architecture -->
+      <section class="section" id="arch">
+        <div class="sec-head">
+          <div class="sec-badge">01</div>
+          <h2>先看懂原理：为什么这套方案不容易封号？</h2>
+        </div>
+        <p class="sec-desc">
+          Claude（Anthropic）风控看的不只是“能不能连上”，而是<strong>出口 IP 干净度 + 关联风控域名同出口 + 浏览器语言/时区一致 + 无 WebRTC/IPv6 泄漏</strong>。下面这张图就是你的流量完整走向：
+        </p>
+
+        <div class="diagram-box" aria-label="链式代理与纯净环境数据流架构图">
+          <svg viewBox="0 0 920 270" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, sans-serif">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#C26142"/>
+              </marker>
+              <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#8C867C"/>
+              </marker>
+              <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#C0392B"/>
+              </marker>
+            </defs>
+
+            <!-- Node 1 -->
+            <rect x="14" y="28" width="150" height="84" rx="12" fill="#FDF1EC" stroke="#D97757" stroke-width="1.6"/>
+            <text x="89" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#A63E1E">① 打开 Claude.lnk</text>
+            <text x="89" y="75" text-anchor="middle" font-size="11" fill="#615D56">校验 ipinfo.io 出口 IP</text>
+            <text x="89" y="93" text-anchor="middle" font-size="11" fill="#615D56">自动切对应美国时区</text>
+
+            <!-- Arrow 1->2 -->
+            <line x1="164" y1="70" x2="196" y2="70" stroke="#C26142" stroke-width="2" marker-end="url(#arrow)"/>
+
+            <!-- Node 2 -->
+            <rect x="200" y="28" width="150" height="84" rx="12" fill="#FFFFFF" stroke="#D6CBB9" stroke-width="1.6"/>
+            <text x="275" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#1F1E1C">② Chrome Clean</text>
+            <text x="275" y="75" text-anchor="middle" font-size="11" fill="#615D56">独立 user-data-dir</text>
+            <text x="275" y="93" text-anchor="middle" font-size="11" fill="#615D56">en-US · 零国内 Cookie</text>
+
+            <!-- Arrow 2->3 -->
+            <line x1="350" y1="70" x2="386" y2="70" stroke="#C26142" stroke-width="2" marker-end="url(#arrow)"/>
+            <text x="368" y="61" text-anchor="middle" font-size="10" fill="#8C867C">系统代理</text>
+
+            <!-- Node 3 -->
+            <rect x="390" y="22" width="166" height="96" rx="12" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.6"/>
+            <text x="473" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#1E3A8A">③ 本地 Mihomo 客户端</text>
+            <text x="473" y="69" text-anchor="middle" font-size="11" fill="#3B5482">Clash Verge / Mihomo Party</text>
+            <text x="473" y="87" text-anchor="middle" font-size="11" fill="#3B5482">JS 置顶规则 · 关闭 QUIC 嗅探</text>
+            <text x="473" y="105" text-anchor="middle" font-size="10.5" font-weight="600" fill="#2563EB">规则模式 (Rule)</text>
+
+            <!-- Arrow 3->4 (Claude path) -->
+            <line x1="556" y1="54" x2="600" y2="54" stroke="#C26142" stroke-width="2.2" marker-end="url(#arrow)"/>
+
+            <!-- Node 4: Relay VPS -->
+            <rect x="604" y="18" width="132" height="72" rx="12" fill="#FFF7E6" stroke="#D99B26" stroke-width="1.6"/>
+            <text x="670" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="#8A5300">④ 三网优化VPS</text>
+            <text x="670" y="62" text-anchor="middle" font-size="11" fill="#7A561E">VLESS Reality TCP</text>
+            <text x="670" y="78" text-anchor="middle" font-size="10.5" fill="#7A561E">自动识别前置中转</text>
+
+            <!-- Arrow 4->5 -->
+            <line x1="736" y1="54" x2="770" y2="54" stroke="#C26142" stroke-width="2.2" marker-end="url(#arrow)"/>
+
+            <!-- Node 5: IPRoyal -->
+            <rect x="774" y="18" width="132" height="72" rx="12" fill="#EBF7F1" stroke="#1F7A52" stroke-width="1.8"/>
+            <text x="840" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="#165C3D">⑤ 独享静态家宽</text>
+            <text x="840" y="62" text-anchor="middle" font-size="11" fill="#1F7A52">IPRoyal-US (ISP)</text>
+            <text x="840" y="78" text-anchor="middle" font-size="10.5" font-weight="700" fill="#165C3D">→ claude.ai</text>
+
+            <!-- Normal traffic branch -->
+            <path d="M 473 118 L 473 176 L 600 176" fill="none" stroke="#8C867C" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arrow-gray)"/>
+            <rect x="604" y="148" width="302" height="56" rx="11" fill="#F4EFE8" stroke="#D6CBB9" stroke-width="1.3"/>
+            <text x="755" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#46423D">其他日常流量（国内直连 / 普通外网走三网优化VPS）</text>
+            <text x="755" y="191" text-anchor="middle" font-size="11" fill="#615D56">不经过 IPRoyal-US，完全不浪费家宽流量</text>
+
+            <!-- WebRTC Block branch -->
+            <path d="M 430 118 L 430 232 L 350 232" fill="none" stroke="#C0392B" stroke-width="1.7" marker-end="url(#arrow-red)"/>
+            <rect x="14" y="206" width="332" height="50" rx="11" fill="#FDEDEB" stroke="#E0948C" stroke-width="1.4"/>
+            <text x="180" y="228" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9E2A1F">🛡️ 拦截 UDP 3478 / 19302（REJECT）</text>
+            <text x="180" y="246" text-anchor="middle" font-size="11" fill="#7C2218">阻断浏览器 WebRTC STUN 探测，防止暴露真实 IP</text>
+
+            <!-- dialer-proxy label -->
+            <rect x="650" y="98" width="212" height="24" rx="6" fill="#FDF1EC" stroke="#E8B9A6"/>
+            <text x="756" y="114" text-anchor="middle" font-size="11" font-weight="600" fill="#A63E1E">链式代理核心：dialer-proxy 串联两跳</text>
+          </svg>
+        </div>
+
+        <div class="grid-3">
+          <div class="mini-card">
+            <h4>🔗 为什么要“两跳”？</h4>
+            <p>直连海外静态家宽往往丢包高、延迟炸；把三网优化VPS作为前置中转（<code class="inline">dialer-proxy</code>），既稳又快，而 Claude 只看得到最终的干净家宽 IP。</p>
+          </div>
+          <div class="mini-card">
+            <h4>🎯 为什么规则要置顶？</h4>
+            <p>把 Claude 主站以及 <code class="inline">hcaptcha</code>、<code class="inline">cloudflare</code>、<code class="inline">stripe</code>、<code class="inline">sentry</code>、<code class="inline">appleid</code> 全部锁在同一个家宽出口，杜绝风控 IP 不一致。</p>
+          </div>
+          <div class="mini-card">
+            <h4>🧯 为什么需要启动熔断？</h4>
+            <p>双击「打开 Claude」时先请求 <code class="inline">ipinfo.io</code>，只要出口不是你设定的家宽 IP，立即弹窗阻止，绝不会误用国内或机房 IP 登号。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Prep -->
+      <section class="section" id="prep">
+        <div class="sec-head">
+          <div class="sec-badge">02</div>
+          <h2>开始前，确认你手里已经备齐这 4 样东西</h2>
+        </div>
+        <ol class="steps">
+          <li class="step-item">
+            <div class="step-no">1</div>
+            <div class="step-body">
+              <strong>你的专属三网优化VPS订阅链接</strong>
+              已在面板单独分配给你的订阅地址（独立凭据，与他人互不干扰）。直接导入代理客户端即可，覆写脚本会<strong>自动识别</strong>其中的 IPv4 TCP 中转节点，无需手动暴露或手抄节点名。
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-no">2</div>
+            <div class="step-body">
+              <strong>你自己独享的美国静态住宅代理（ISP）</strong>
+              推荐在 IPRoyal 等平台各自单独购买 1 个美国静态住宅（Static Residential / ISP）代理，拿到 <code class="inline">IP</code>、<code class="inline">HTTP 端口</code>（常见为 12323）、<code class="inline">用户名</code>、<code class="inline">密码</code>，并记下它所在的<strong>美国城市</strong>（用于匹配时区）。
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-no">3</div>
+            <div class="step-body">
+              <strong>Mihomo 内核本地代理客户端（二选一）</strong>
+              Windows 上安装 <strong>Clash Verge Rev</strong> 或 <strong>Mihomo Party</strong>（旧版已停更的 Clash for Windows 不支持 Mihomo 链式代理，请勿使用）。
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-no">4</div>
+            <div class="step-body">
+              <strong>Google Chrome 浏览器 + 本页提供的启动脚本包</strong>
+              点击下载 <a href="./ClaudeCleanLauncher.zip" download>ClaudeCleanLauncher.zip</a> 并解压到任意英文路径文件夹即可（例如桌面或 <code class="inline">D:\Tools\ClaudeCleanLauncher</code>）。
+            </div>
+          </li>
+        </ol>
+
+        <div class="callout danger">
+          <span class="callout-icon">🚫</span>
+          <div>
+            <strong>三条红线，千万别踩：</strong><br/>
+            1）<strong>绝对不要</strong>多人共用同一个家宽 IP 登录各自的 Claude 账号；<br/>
+            2）<strong>绝对不要</strong>直接复制别人的 <code class="inline">ChromeClean-US</code> 文件夹（里面含别人的指纹与登录态）；<br/>
+            3）拿到静态 IP 在哪座城市，时区就配哪里的时区——买了美东纽约 IP 却照抄洛杉矶时间，反而会制造异常特征。
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Interactive Generator -->
+      <section class="section" id="generator">
+        <div class="sec-head">
+          <div class="sec-badge">03</div>
+          <h2>个人专属配置在线生成器（零手敲、防拼错）</h2>
+        </div>
+        <p class="sec-desc">
+          在下面填入你自己的参数，页面会在浏览器本地实时生成专属的 <code class="inline">mihomo-override.js</code> 和 <code class="inline">config.psd1</code>，支持一键复制或直接下载覆盖。
+        </p>
+
+        <div class="gen-grid">
+          <div class="field">
+            <label for="f-ip">你的静态家宽 IP <span>纯 IPv4 地址</span></label>
+            <input id="f-ip" type="text" value="" placeholder="例如：xxx.xxx.xxx.xxx" />
+          </div>
+          <div class="field">
+            <label for="f-tz">家宽所在美国地区 / 时区 <span>自动映射 Windows 时区 ID</span></label>
+            <select id="f-tz">
+              <option value="Pacific Standard Time" selected>🇺🇸 美西：洛杉矶 / 旧金山 / 西雅图（Pacific Standard Time）</option>
+              <option value="Mountain Standard Time">🇺🇸 山地：丹佛 / 盐湖城（Mountain Standard Time）</option>
+              <option value="Central Standard Time">🇺🇸 美中：芝加哥 / 达拉斯 / 休斯顿（Central Standard Time）</option>
+              <option value="Eastern Standard Time">🇺🇸 美东：纽约 / 弗吉尼亚 / 迈阿密（Eastern Standard Time）</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-port">家宽 HTTP 端口 <span>IPRoyal 默认多为 12323</span></label>
+            <input id="f-port" type="number" value="12323" placeholder="12323" />
+          </div>
+          <div class="field">
+            <label for="f-dialer">前置中转节点名（可选） <span>推荐留空，自动识别当前订阅</span></label>
+            <input id="f-dialer" type="text" value="" placeholder="留空自动识别订阅中的三网优化VPS节点（推荐）" />
+          </div>
+          <div class="field">
+            <label for="f-user">家宽代理用户名 <span>区分大小写</span></label>
+            <input id="f-user" type="text" value="" placeholder="填入你的家宽 username" />
+          </div>
+          <div class="field">
+            <label for="f-pass">家宽代理密码 <span>仅在本地浏览器内存拼接</span></label>
+            <input id="f-pass" type="text" value="" placeholder="填入你的家宽 password" />
+          </div>
+          <div class="gen-status">
+            <span id="gen-hint">💡 填写上面的 IP、用户名和密码后，下方两份配置文件会自动更新（前置中转默认自动识别，无需暴露节点名）。</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-reset">恢复默认占位</button>
+          </div>
+        </div>
+
+        <!-- Output 1: mihomo-override.js -->
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>📄 mihomo-override.js（粘贴到 Clash Verge Rev / Mihomo Party 全局 JS 覆写）</span>
+            <div class="code-bar-actions">
+              <button type="button" class="code-btn" data-copy-target="out-js">复制代码</button>
+              <button type="button" class="code-btn" id="dl-js">下载 .js</button>
+            </div>
+          </div>
+          <pre id="out-js"></pre>
+        </div>
+
+        <!-- Output 2: config.psd1 -->
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>📄 ClaudeCleanLauncher\config.psd1（下载后直接替换解压目录里的同名文件）</span>
+            <div class="code-bar-actions">
+              <button type="button" class="code-btn" data-copy-target="out-psd1">复制内容</button>
+              <button type="button" class="code-btn" id="dl-psd1">下载 config.psd1 (UTF-8 BOM)</button>
+            </div>
+          </div>
+          <pre id="out-psd1"></pre>
+        </div>
+      </section>
+
+      <!-- Section 4: Proxy Client Setup -->
+      <section class="section" id="step-client">
+        <div class="sec-head">
+          <div class="sec-badge">04</div>
+          <h2>第一步：在代理客户端导入三网优化VPS订阅并启用 JS 覆写</h2>
+        </div>
+        <p class="sec-desc">根据你电脑安装的客户端切换下方标签，照着点就行（约 2 分钟）：</p>
+
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab-btn active" data-tab="verge">Clash Verge Rev（推荐）</button>
+          <button type="button" class="tab-btn" data-tab="party">Mihomo Party</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-verge">
+          <ol class="steps">
+            <li class="step-item">
+              <div class="step-no">1</div>
+              <div class="step-body">
+                <strong>导入你的专属三网优化VPS订阅</strong>
+                打开左侧「订阅」→ 顶部输入框粘贴分配给你的订阅链接 → 点击「导入」并选中该订阅卡片。
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-no">2</div>
+              <div class="step-body">
+                <strong>前置节点自动识别（无需手填节点名）</strong>
+                本页生成的 JS 覆写默认将 <code class="inline">DIALER_PROXY</code> 留空，会在运行时自动挑选你当前订阅中的首个 <strong>IPv4 TCP（VLESS / Trojan / VMess / SS）</strong> 节点作为中转，自动避开 HY2 和 IPv6 节点，既隐秘又防手滑拼错。
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-no">3</div>
+              <div class="step-body">
+                <strong>粘贴全局扩展脚本（关键一步）</strong>
+                回到「订阅」页底部，找到「全局扩展脚本」→ 右键点击「编辑文件」→ 全选替换为你在 <strong>第 03 节生成的 <code class="inline">mihomo-override.js</code></strong> → 保存。
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-no">4</div>
+              <div class="step-body">
+                <strong>开启「规则模式」+「系统代理」</strong>
+                「代理」页顶部保持 <strong>规则（Rule）</strong>；「设置」页打开 <strong>系统代理</strong>（一般无需开 TUN 模式）。最后切到「规则」页，如果最顶部能看到 <code class="inline">DOMAIN-SUFFIX,claude.ai,IPRoyal-US</code>，就说明注入成功！
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="tab-panel" id="tab-party">
+          <ol class="steps">
+            <li class="step-item">
+              <div class="step-no">1</div>
+              <div class="step-body">
+                <strong>导入你的专属三网优化VPS订阅</strong>
+                打开「订阅管理」→ 粘贴分配给你的订阅链接导入，并确认当前激活的是该订阅。
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-no">2</div>
+              <div class="step-body">
+                <strong>前置节点自动识别（无需手填节点名）</strong>
+                覆写脚本会自动识别订阅里的首个 IPv4 TCP 中转节点并挂载到 <code class="inline">IPRoyal-US</code> 之前；仅当你订阅含多条线路且想锁定某一条时，才需要在生成器中手动填写节点名。
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-no">3</div>
+              <div class="step-body">
+                <strong>新建并启用 JS 覆写</strong>
+                打开「覆写」→ 新建「JavaScript」类型覆写 → 粘贴 <strong>第 03 节生成的 <code class="inline">mihomo-override.js</code></strong> 并保存 → 在订阅卡片的覆写设置中勾选启用该脚本。
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-no">4</div>
+              <div class="step-body">
+                <strong>开启「规则模式」+「系统代理」</strong>
+                确保顶部运行模式为 <strong>规则（Rule）</strong>，打开 <strong>系统代理</strong> 开关（无需开虚拟网卡 TUN）。在「规则」页顶部看到 <code class="inline">claude.ai → IPRoyal-US</code> 即大功告成。
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-icon">✅</span>
+          <div>
+            <strong>为什么特意让你用 JS 覆写而不是 YAML Merge？</strong><br/>
+            很多客户端的 YAML Merge 会把原本的 <code class="inline">rules</code> 或 <code class="inline">proxies</code> 整段覆盖清空；而 JS 覆写是用 <code class="inline">push</code> 追加家宽节点、用 <code class="inline">unshift</code> 把 Claude 规则插到绝对顶部，安全又无损原有分流。
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Chrome & Launcher -->
+      <section class="section" id="step-launcher">
+        <div class="sec-head">
+          <div class="sec-badge">05</div>
+          <h2>第二步：部署纯净浏览器与桌面一键启动脚本</h2>
+        </div>
+        <p class="sec-desc">
+          先下载 <a href="./ClaudeCleanLauncher.zip" download>ClaudeCleanLauncher.zip</a> 并解压，把第 03 节下载好的 <code class="inline">config.psd1</code> 覆盖放进解压后的文件夹中，然后按下面 3 条命令顺序执行即可：
+        </p>
+
+        <h3>5.1 首次初始化你自己的 Chrome Clean (US)</h3>
+        <p>在解压出来的 <code class="inline">ClaudeCleanLauncher</code> 文件夹空白处，按住 <code class="inline">Shift</code> 点击鼠标右键 → 选择「在此处打开 PowerShell 窗口（或在终端中打开）」，运行：</p>
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>PowerShell · 仅首次需要执行一次</span>
+            <div class="code-bar-actions">
+              <button type="button" class="code-btn" data-copy-target="cmd-init">复制命令</button>
+            </div>
+          </div>
+          <pre id="cmd-init">powershell -NoProfile -ExecutionPolicy Bypass -File .\Init-ChromeClean.ps1</pre>
+        </div>
+        <p>运行后会弹出一个全新的空白英文 Chrome 窗口。<strong>不要登录国内账号、不要开启浏览器同步、不要装乱七八糟的插件</strong>，直接关闭该窗口即可完成初始化。</p>
+
+        <h3>5.2 一键安装到本机并生成桌面快捷方式</h3>
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>PowerShell · 自动部署至 %LOCALAPPDATA%\ClaudeCleanLauncher</span>
+            <div class="code-bar-actions">
+              <button type="button" class="code-btn" data-copy-target="cmd-install">复制命令</button>
+            </div>
+          </div>
+          <pre id="cmd-install">powershell -NoProfile -ExecutionPolicy Bypass -File .\Install-Shortcuts.ps1</pre>
+        </div>
+        <p>完成后，桌面会自动出现 3 个快捷方式（原来的解压文件夹之后可以删掉）：</p>
+        <table>
+          <thead>
+            <tr>
+              <th>桌面图标</th>
+              <th>实际作用</th>
+              <th>什么时候点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>打开 Claude</strong></td>
+              <td>检查目录 → 校验 <code class="inline">ipinfo.io</code> 出口 IP → 自动切美国时区 → 打开 <code class="inline">claude.ai</code></td>
+              <td>每次准备用 Claude 时</td>
+            </tr>
+            <tr>
+              <td><strong>恢复北京时间</strong></td>
+              <td>将系统时区固定恢复为 <code class="inline">China Standard Time</code>（不关闭浏览器）</td>
+              <td>用完 Claude 后随手点一下</td>
+            </tr>
+            <tr>
+              <td><strong>Chrome Clean (US)</strong></td>
+              <td>直接打开隔离的英文纯净 Chrome（不改系统时区）</td>
+              <td>单独做网络体检或访问美区网页</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>5.3 运行只读预检确认全部绿灯</h3>
+        <div class="code-wrap">
+          <div class="code-bar">
+            <span>PowerShell · 不会改时区、不会打开浏览器</span>
+            <div class="code-bar-actions">
+              <button type="button" class="code-btn" data-copy-target="cmd-preflight">复制命令</button>
+            </div>
+          </div>
+          <pre id="cmd-preflight">powershell -NoProfile -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\ClaudeCleanLauncher\Preflight.ps1"</pre>
+        </div>
+        <p>看到绿色提示 <strong><code class="inline">PREFLIGHT PASSED（全部预检通过）</code></strong> 就可以进入最后的 30 秒体检！</p>
+      </section>
+
+      <!-- Section 6: Interactive 30s Checklist -->
+      <section class="section" id="checklist">
+        <div class="sec-head">
+          <div class="sec-badge">06</div>
+          <h2>首次登号前 30 秒互动体检清单</h2>
+        </div>
+        <p class="sec-desc">
+          双击桌面「打开 Claude」后，先别急着输账号密码！在弹出的纯净 Chrome 里新建标签页，对照下面 6 项逐一确认（勾选状态会自动保存）：
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:13.5px;">
+          <span>体检进度：<strong id="check-count">0 / 6</strong></span>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-clear-check">重置勾选</button>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="check-bar"></div>
+        </div>
+
+        <div class="check-list" id="check-list">
+          <label class="check-item">
+            <input type="checkbox" data-check="c1" />
+            <div>
+              <div class="check-title">1. 启动脚本出口强校验通过</div>
+              <div class="check-sub">双击「打开 Claude」时黑框显示绿色的 <code class="inline">出口 IP 检查通过：你的家宽 IP</code>，未报错中止。</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" data-check="c2" />
+            <div>
+              <div class="check-title">2. Windows 右下角时间已切换为对应美国时间</div>
+              <div class="check-sub">通过 UAC 弹窗（点“是”）后，系统时区成功切到你所买家宽对应的美国时区。</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" data-check="c3" />
+            <div>
+              <div class="check-title">3. ping0.cc / ipinfo.io 确认出口纯净度</div>
+              <div class="check-sub">在纯净 Chrome 中访问 <code class="inline">https://ping0.cc</code> 或 <code class="inline">https://ipinfo.io</code>：出口 IP 是你自己的静态住宅 IP（ISP / Residential），不是中转机房 IP。</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" data-check="c4" />
+            <div>
+              <div class="check-title">4. WebRTC 与 IPv6 零泄漏</div>
+              <div class="check-sub">访问 <code class="inline">https://browserleaks.com/webrtc</code> 和 <code class="inline">https://browserleaks.com/ip</code>：看不到国内真实公网 IP，也看不到国内运营商 <code class="inline">2409:</code> / <code class="inline">240e:</code> / <code class="inline">2408:</code> 开头的 IPv6 地址。</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" data-check="c5" />
+            <div>
+              <div class="check-title">5. 浏览器语言与时区与 IP 所在城市一致</div>
+              <div class="check-sub">在 <code class="inline">browserleaks.com/javascript</code> 中确认 <code class="inline">navigator.language</code> 为 <code class="inline">en-US</code>，时区与你家宽城市一致（例如洛杉矶对应 <code class="inline">America/Los_Angeles</code>）。</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" data-check="c6" />
+            <div>
+              <div class="check-title">6. 测试「恢复北京时间」工作正常</div>
+              <div class="check-sub">用完后点桌面「恢复北京时间」，右下角时间能顺利恢复为北京时间（避免影响战网、日程软件等程序）。</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="ready-banner" id="ready-banner">
+          <span>🎉 全部 6 项体检通过！你的独享家宽 Claude 环境已经完全就绪，可以安心登录使用。</span>
+        </div>
+      </section>
+
+      <!-- Section 7: FAQ -->
+      <section class="section" id="faq">
+        <div class="sec-head">
+          <div class="sec-badge">07</div>
+          <h2>常见问题与排障解答（FAQ）</h2>
+        </div>
+        <p class="sec-desc">遇到报错或不确定某个细节？先按关键词搜索，或按分类筛选查看解决方案：</p>
+
+        <div class="faq-controls">
+          <input class="faq-search" id="faq-search" type="search" placeholder="🔍 搜索关键词，如：出口、时区、报错、流量、QUIC、续费..." />
+          <div class="faq-tags" id="faq-tags">
+            <button type="button" class="faq-tag active" data-cat="all">全部 (12)</button>
+            <button type="button" class="faq-tag" data-cat="原理">原理与风控</button>
+            <button type="button" class="faq-tag" data-cat="报错">报错排查</button>
+            <button type="button" class="faq-tag" data-cat="日常">日常与维护</button>
+          </div>
+        </div>
+
+        <div class="faq-list" id="faq-list">
+          <details class="faq-item" data-cat="原理" open>
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">原理与风控</span>为什么一定要“三网优化VPS 中转 + 家宽落地”两跳？只用中转或只用家宽不行吗？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p><strong>只用三网优化VPS（机房 IP）：</strong>机房线路属于数据中心 ASN，极容易被 Anthropic / Cloudflare 标记为机房代理，轻则频繁跳人机验证，重则注册/绑卡或日常对话中直接封号。</p>
+              <p><strong>国内直连家宽：</strong>海外静态住宅代理服务器通常不针对中国大陆优化，直连高丢包、握手慢甚至直接被墙阻断。</p>
+              <p><strong>两跳链式代理（三网优化VPS → 家宽）：</strong>用三网优化VPS的优质回国/出国专线保证低延迟和加密稳定性，最后由干净的独享静态住宅 IP 访问 Claude，兼顾速度与低风控。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="原理">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">原理与风控</span>几个人共用同一个三网优化VPS面板下发的不同订阅，会互相连坐封号吗？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p><strong>不会。</strong>三网优化VPS只是加密运输通道，Claude 服务端完全看不到第一跳的中转 IP，它只能看到你们各自购买的第二跳 <strong>独享静态住宅 IP</strong>。</p>
+              <p>只要满足：<strong>每人各自买独立家宽 IP + 各自独立 Claude 账号与支付方式 + 各自独立浏览器目录</strong>，就不会因为共用同一台中转服务器而被关联。唯一需要注意的只是大家约定好不要拿中转线路挂 BT 或下载大文件，避免把中转带宽或月流量耗尽。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="原理">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">原理与风控</span>平时刷 B 站、看 YouTube、下大文件，会不会消耗昂贵的家宽流量？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p><strong>完全不会。</strong>因为 <code class="inline">mihomo-override.js</code> 故意没有把 <code class="inline">IPRoyal-US</code> 塞进任何「自动选择」或「手动切换」策略组，只有被置顶规则精确命中的那 20 多个域名（Claude 主站、人机验证、风控遥测、Stripe 支付、Apple 登录和 <code class="inline">ipinfo.io</code>）才会走家宽。</p>
+              <p>其余国内网站照常直连，普通外网（如 GitHub、Google、YouTube）照常走三网优化VPS，一滴家宽流量都不会浪费。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="报错">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">报错排查</span>双击「打开 Claude」弹窗提示“代理出口不符合预期”怎么办？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p>这是脚本的<strong>熔断保护生效了</strong>（它成功帮你挡住了一次异常 IP 登号风险）。请按以下 4 步排查：</p>
+              <ul>
+                <li><strong>看弹窗里的「当前出口」IP 是什么：</strong>如果是国内 IP → 说明代理客户端没开「系统代理」；如果是中转机房 IP → 说明客户端选成了「全局模式 (Global)」或 JS 覆写没生效。</li>
+                <li><strong>检查客户端「规则」页面：</strong>最顶部是否能看到 <code class="inline">DOMAIN,ipinfo.io,IPRoyal-US</code>？如果看不到，说明 JS 覆写没有保存或未在当前订阅启用。</li>
+                <li><strong>检查家宽是否可用：</strong>在客户端「连接/日志」里查看连向 <code class="inline">IPRoyal-US</code> 的报错，确认家宽的 IP、端口、用户名、密码没填错且没有到期。</li>
+                <li><strong>核对 <code class="inline">config.psd1</code>：</strong>确认 <code class="inline">%LOCALAPPDATA%\ClaudeCleanLauncher\config.psd1</code> 里的 <code class="inline">ExpectedExitIp</code> 填的是最新家宽 IP。</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="报错">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">报错排查</span>前置节点名为什么推荐留空？如果订阅里有多个节点会自动选哪一个？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p>留空时，覆写脚本不会暴露任何节点名称，也不用把订阅链接硬编码进脚本文本里（更隐秘、更安全），而是直接在客户端内存中扫描你当前激活的订阅，<strong>自动优先选择第一个 IPv4 的 TCP 节点</strong>（自动跳过 HY2、TUIC 和 IPv6 节点）。</p>
+              <p>如果你的订阅里有多条不同线路、且希望固定走其中某一条，再在生成器里的「前置中转节点名（可选）」中填入该节点的准确名称即可。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="报错">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">报错排查</span>运行 .ps1 时闪退，或提示“在此系统上禁止运行脚本”怎么办？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p>Windows 默认禁止直接双击或无参数运行本地 <code class="inline">.ps1</code> 脚本。请务必使用带绕过参数的命令启动（桌面快捷方式已经自动写好了这个参数，无需担心）：</p>
+              <p><code class="inline">powershell -NoProfile -ExecutionPolicy Bypass -File .\Install-Shortcuts.ps1</code></p>
+              <p>另外，如果从网上下载的压缩包解压后被 Windows 标了“来自其他计算机”锁定，可以右键 <code class="inline">.zip</code> 文件 → 属性 → 勾选右下角「解除锁定」→ 确定后再解压。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="报错">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">报错排查</span>点击「打开 Claude」提示“未找到 Chrome Clean (US) 配置目录 / 缺少 Local State”？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p>为了防止误启动你平时用来上国内网站的默认 Chrome 造成环境污染，<code class="inline">Start-Claude.ps1</code> 会强制检查隔离目录是否已经初始化完毕。</p>
+              <p>只需运行一次 <code class="inline">powershell -NoProfile -ExecutionPolicy Bypass -File .\Init-ChromeClean.ps1</code>，等空白英文 Chrome 弹出来之后<strong>正常点右上角关闭</strong>，它就会自动生成 <code class="inline">Local State</code> 和 <code class="inline">Default\Preferences</code>。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="原理">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">原理与风控</span>为什么必须改 Windows 系统时区？用完不改回去有什么影响？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p>网页可以通过 JavaScript 的 <code class="inline">Intl.DateTimeFormat().resolvedOptions().timeZone</code> 直接读取操作系统时区。如果你的出口 IP 在美国洛杉矶（UTC-8），浏览器上报的时区却是 <code class="inline">Asia/Shanghai</code>（UTC+8），属于非常典型的“代理特征不匹配”。</p>
+              <p>因为修改的是 Windows 全局系统时区，可能会影响战网客户端、部分对本地时间敏感的游戏或日历提醒，所以<strong>用完 Claude 后记得点一下桌面「恢复北京时间」</strong>（该脚本固定恢复为 <code class="inline">China Standard Time</code>，即使你中途多次点了「打开 Claude」也不会出错）。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="日常">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">日常与维护</span>我买到的 IPRoyal 静态 IP 不在洛杉矶（比如纽约、达拉斯、芝加哥）怎么改？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p>完全没问题！只要保证 <strong>Windows 目标时区与你 IP 所在城市属于同一时区</strong>即可。在本页第 03 节「在线生成器」的地区下拉框里直接选择对应美国区域，或者手动把 <code class="inline">config.psd1</code> 中的 <code class="inline">TargetTzId</code> 改为：</p>
+              <ul>
+                <li>美西（洛杉矶 / 旧金山 / 西雅图）：<code class="inline">Pacific Standard Time</code></li>
+                <li>山地（丹佛 / 盐湖城）：<code class="inline">Mountain Standard Time</code></li>
+                <li>美中（芝加哥 / 达拉斯 / 休斯顿）：<code class="inline">Central Standard Time</code></li>
+                <li>美东（纽约 / 弗吉尼亚 / 迈阿密）：<code class="inline">Eastern Standard Time</code></li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="原理">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">原理与风控</span>为什么建议只开「系统代理」而不是开 TUN 模式？为什么要关闭 QUIC 嗅探？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p><strong>关于系统代理：</strong>Chrome 和 PowerShell 走 HTTP 系统代理时，所有 HTTPS 请求都会以 <strong>TCP HTTP CONNECT（携带原始域名）</strong> 直接发给本机 Mihomo，既不会经过本机 DNS 也不会走运营商 IPv6（<code class="inline">2409:</code>）直连，链路最干净、最不易泄漏。</p>
+              <p><strong>关于关闭 QUIC 嗅探：</strong>IPRoyal 静态住宅 HTTP 代理不支持 UDP 转发（配置里是 <code class="inline">udp: false</code>）。关闭 <code class="inline">sniffer.sniff.quic</code> 可以防止 UDP 443（HTTP/3）流量在嗅探匹配到纯 HTTP 家宽时出现卡顿或异常回退。</p>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="日常">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">日常与维护</span>以后家宽到期换了新 IP，或者修改了密码，需要改哪几个地方？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p>只需要同步更新 <strong>2 个地方</strong>（建议回到本页第 03 节重新生成一遍最省心）：</p>
+              <ol>
+                <li>代理客户端里的 <strong>全局 JS 覆写（<code class="inline">mihomo-override.js</code>）</strong>：更新 <code class="inline">ISP_SERVER</code> / 端口 / 用户名 / 密码并刷新订阅；</li>
+                <li>本机 <strong><code class="inline">%LOCALAPPDATA%\ClaudeCleanLauncher\config.psd1</code></strong>：更新 <code class="inline">ExpectedExitIp</code>（若跨州换了城市，一并更新 <code class="inline">TargetTzId</code>）。</li>
+              </ol>
+            </div>
+          </details>
+
+          <details class="faq-item" data-cat="日常">
+            <summary>
+              <span class="faq-q-left"><span class="faq-cat">日常与维护</span>已经打开一个 Claude 窗口了，再点一次「打开 Claude」会出问题吗？</span>
+              <span class="faq-arrow">▼</span>
+            </summary>
+            <div class="faq-ans">
+              <p><strong>不会，可以放心重复点击。</strong>脚本检测到当前已经是目标美国时区时会直接跳过切换步骤，不会弹窗重复要 UAC 权限，也不会关闭你现有的普通 Chrome 或已打开的 Claude 标签页，只会在同一个 <code class="inline">Chrome Clean (US)</code> 里新开一个 <code class="inline">claude.ai</code> 标签页。</p>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div>Claude 独享家宽配置指南 · <strong>claude.guanjievps.qd.je</strong></div>
+    <div style="margin-top:4px;">纯静态离线可用页面 · 所有配置均在本地浏览器即时生成，不收集任何账号或 IP 信息</div>
+  </footer>
+
+  <div class="toast" id="toast">已复制到剪贴板</div>
+
+  <script>
+    (function () {
+      const $ = (id) => document.getElementById(id);
+
+      const fDialer = $('f-dialer');
+      const fTz = $('f-tz');
+      const fIp = $('f-ip');
+      const fPort = $('f-port');
+      const fUser = $('f-user');
+      const fPass = $('f-pass');
+      const outJs = $('out-js');
+      const outPsd1 = $('out-psd1');
+      const genHint = $('gen-hint');
+
+      function escJs(s) {
+        return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      }
+      function escPs(s) {
+        return String(s).replace(/'/g, "''");
+      }
+
+      function buildJs() {
+        const dialer = (fDialer.value || '').trim();
+        const ip = (fIp.value || '').trim() || 'xxx.xxx.xxx.xxx';
+        const port = Number(fPort.value) || 12323;
+        const user = (fUser.value || '').trim() || '<填入家宽用户名>';
+        const pass = (fPass.value || '').trim() || '<填入家宽密码>';
+
+        return `/**
+ * Clash Verge Rev / Mihomo Party 全局扩展脚本（JavaScript）
+ * 由 claude.guanjievps.qd.je 在线生成
+ * 默认自动识别当前订阅中的三网优化VPS（首个 IPv4 TCP 节点），无需暴露节点名
+ */
+
+const ISP_NAME = 'IPRoyal-US';
+const ISP_SERVER = '${escJs(ip)}';
+const ISP_PORT = ${port};
+const ISP_USERNAME = '${escJs(user)}';
+const ISP_PASSWORD = '${escJs(pass)}';
+
+// 留空 '' 时自动识别当前订阅首个 IPv4 TCP 节点（推荐）；如需锁定指定节点再填名称
+const DIALER_PROXY = '${escJs(dialer)}';
+
+const CLAUDE_TOP_RULES = [
+  // 1. Claude / Anthropic 核心域名
+  \`DOMAIN-SUFFIX,claude.ai,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,claude.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,anthropic.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,claudeusercontent.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,claudemcpclient.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,servd-anthropic-website.b-cdn.net,\${ISP_NAME}\`,
+
+  // 2. 启动脚本出口 IP 校验域名
+  \`DOMAIN,ipinfo.io,\${ISP_NAME}\`,
+
+  // 3. 人机验证 / 风控遥测 / 支付相关域名
+  \`DOMAIN-SUFFIX,hcaptcha.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,challenges.cloudflare.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,sentry.io,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,intercom.io,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,intercomcdn.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,datadoghq.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,statsig.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,statsigapi.net,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,segment.io,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,segment.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,stripe.com,\${ISP_NAME}\`,
+  \`DOMAIN-SUFFIX,stripe.network,\${ISP_NAME}\`,
+
+  // 4. Apple 登录 / 订阅认证域名
+  \`DOMAIN,appleid.apple.com,\${ISP_NAME}\`,
+  \`DOMAIN,idmsa.apple.com,\${ISP_NAME}\`,
+  \`DOMAIN,appleid.cdn-apple.com,\${ISP_NAME}\`,
+  \`DOMAIN,gsa.apple.com,\${ISP_NAME}\`,
+
+  // 5. 拦截常见 STUN 端口，防止 WebRTC 泄漏真实 IP
+  'DST-PORT,3478,REJECT',
+  'DST-PORT,19302,REJECT',
+];
+
+function resolveDialerProxy(config) {
+  const proxies = Array.isArray(config.proxies)
+    ? config.proxies.filter((p) => p && p.name && p.name !== ISP_NAME)
+    : [];
+  const groups = Array.isArray(config['proxy-groups'])
+    ? config['proxy-groups'].filter((g) => g && g.name)
+    : [];
+
+  const manual = String(DIALER_PROXY || '').trim();
+  if (manual) {
+    if (!config['proxy-providers'] && proxies.length > 0) {
+      const names = new Set([...proxies.map((p) => p.name), ...groups.map((g) => g.name)]);
+      if (!names.has(manual)) {
+        throw new Error(\`未在当前订阅中找到前置节点 "\${manual}"，建议将 DIALER_PROXY 留空以自动识别\`);
+      }
+    }
+    return manual;
+  }
+
+  const tcpTypes = new Set(['vless', 'trojan', 'vmess', 'ss', 'ssr']);
+  const isIpv6Server = (srv) => typeof srv === 'string' && srv.includes(':');
+  const isV6OrUdpName = (name) => /(^|[-_\\s])(v6|ipv6|hy2|hysteria|tuic)\\b/i.test(String(name));
+
+  const preferred = proxies.find(
+    (p) =>
+      tcpTypes.has(String(p.type || '').toLowerCase()) &&
+      !isIpv6Server(p.server) &&
+      !isV6OrUdpName(p.name)
+  );
+  if (preferred) return preferred.name;
+
+  const nonUdp = proxies.find(
+    (p) => !['hysteria', 'hysteria2', 'tuic'].includes(String(p.type || '').toLowerCase())
+  );
+  if (nonUdp) return nonUdp.name;
+  if (proxies.length > 0) return proxies[0].name;
+
+  const selectGroup =
+    groups.find((g) => g.type === 'select' && /手动|节点|proxy|select/i.test(g.name)) ||
+    groups.find((g) => g.type === 'select') ||
+    groups[0];
+  if (selectGroup) return selectGroup.name;
+
+  throw new Error('未能从当前订阅自动识别到三网优化VPS前置节点，请确认已导入订阅或手动填写 DIALER_PROXY');
+}
+
+function main(config) {
+  if (!config || typeof config !== 'object') return config;
+
+  if (
+    !ISP_SERVER || ISP_SERVER.includes('<') || /x{2,}/i.test(ISP_SERVER) ||
+    !ISP_USERNAME || ISP_USERNAME.includes('<') ||
+    !ISP_PASSWORD || ISP_PASSWORD.includes('<')
+  ) {
+    throw new Error('请先在覆写脚本顶部填写你自己的家宽 IP、端口、用户名和密码');
+  }
+
+  if (!Array.isArray(config.proxies)) config.proxies = [];
+  const dialerName = resolveDialerProxy(config);
+
+  // 1. 追加独享家宽节点（不放入自动测速/手动切换组，避免浪费家宽流量）
+  config.proxies = config.proxies.filter((p) => p && p.name !== ISP_NAME);
+  config.proxies.push({
+    name: ISP_NAME,
+    type: 'http',
+    server: ISP_SERVER,
+    port: Number(ISP_PORT),
+    username: String(ISP_USERNAME),
+    password: String(ISP_PASSWORD),
+    'dialer-proxy': dialerName,
+    udp: false,
+  });
+
+  // 2. 置顶 Claude 与防泄漏规则
+  if (!Array.isArray(config.rules)) config.rules = [];
+  const topSet = new Set(CLAUDE_TOP_RULES);
+  config.rules = config.rules.filter((r) => !topSet.has(r));
+  config.rules.unshift(...CLAUDE_TOP_RULES);
+
+  // 3. 关闭 QUIC 嗅探（适配 udp: false 纯 HTTP 家宽）
+  if (config.sniffer && config.sniffer.sniff && config.sniffer.sniff.quic) {
+    delete config.sniffer.sniff.quic;
+  }
+
+  return config;
+}
+`;
+      }
+
+      function buildPsd1() {
+        const ip = (fIp.value || '').trim() || 'xxx.xxx.xxx.xxx';
+        const tz = fTz.value || 'Pacific Standard Time';
+        return `@{
+    # 由 claude.guanjievps.qd.je 在线生成
+    ExpectedExitIp  = '${escPs(ip)}'
+    TargetTzId      = '${escPs(tz)}'
+    HomeTzId        = 'China Standard Time'
+    ClaudeUrl       = 'https://claude.ai'
+    UserDataDirName = 'ChromeClean-US'
+    ChromeExe       = ''
+}
+`;
+      }
+
+      function renderGenerator() {
+        outJs.textContent = buildJs();
+        outPsd1.textContent = buildPsd1();
+        const ready =
+          fIp.value.trim() !== '' &&
+          fUser.value.trim() !== '' &&
+          fPass.value.trim() !== '';
+        genHint.textContent = ready
+          ? '✅ 参数已填齐！直接点击下方「复制」或「下载」即可使用。'
+          : '💡 填写上面的 IP、用户名和密码后，下方两份配置文件会自动更新（前置中转默认自动识别，无需暴露节点名）。';
+      }
+
+      [fDialer, fTz, fIp, fPort, fUser, fPass].forEach((el) => {
+        el.addEventListener('input', renderGenerator);
+        el.addEventListener('change', renderGenerator);
+      });
+
+      $('btn-reset').addEventListener('click', () => {
+        fDialer.value = '';
+        fTz.value = 'Pacific Standard Time';
+        fIp.value = '';
+        fPort.value = '12323';
+        fUser.value = '';
+        fPass.value = '';
+        renderGenerator();
+        showToast('已重置表单');
+      });
+
+      function downloadFile(filename, content, withBomAndCrlf) {
+        let finalContent = content;
+        if (withBomAndCrlf) {
+          finalContent = '\uFEFF' + content.replace(/\r?\n/g, '\r\n');
+        }
+        const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('已开始下载 ' + filename);
+      }
+
+      $('dl-js').addEventListener('click', () => downloadFile('mihomo-override.js', buildJs(), false));
+      $('dl-psd1').addEventListener('click', () => downloadFile('config.psd1', buildPsd1(), true));
+
+      // Toast
+      let toastTimer = null;
+      function showToast(msg) {
+        const t = $('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+      }
+
+      // Copy buttons
+      document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = $(btn.getAttribute('data-copy-target'));
+          if (!target) return;
+          const text = target.textContent;
+          try {
+            await navigator.clipboard.writeText(text);
+            showToast('已复制到剪贴板');
+          } catch {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            showToast('已复制到剪贴板');
+          }
+        });
+      });
+
+      // Client tabs
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+          document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+          btn.classList.add('active');
+          const panel = $('tab-' + btn.getAttribute('data-tab'));
+          if (panel) panel.classList.add('active');
+        });
+      });
+
+      // Interactive Checklist
+      const STORE_KEY = 'claude_isp_checklist_v1';
+      const checks = Array.from(document.querySelectorAll('#check-list input[type="checkbox"]'));
+      function loadChecks() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+          checks.forEach((cb) => {
+            cb.checked = !!saved[cb.dataset.check];
+          });
+        } catch {}
+        updateCheckUI();
+      }
+      function saveChecks() {
+        const data = {};
+        checks.forEach((cb) => { data[cb.dataset.check] = cb.checked; });
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch {}
+      }
+      function updateCheckUI() {
+        let done = 0;
+        checks.forEach((cb) => {
+          const item = cb.closest('.check-item');
+          if (cb.checked) {
+            done++;
+            item.classList.add('checked');
+          } else {
+            item.classList.remove('checked');
+          }
+        });
+        $('check-count').textContent = `${done} / ${checks.length}`;
+        $('check-bar').style.width = `${Math.round((done / checks.length) * 100)}%`;
+        $('ready-banner').classList.toggle('show', done === checks.length);
+      }
+      checks.forEach((cb) => {
+        cb.addEventListener('change', () => {
+          saveChecks();
+          updateCheckUI();
+        });
+      });
+      $('btn-clear-check').addEventListener('click', () => {
+        checks.forEach((cb) => { cb.checked = false; });
+        saveChecks();
+        updateCheckUI();
+        showToast('体检清单已重置');
+      });
+
+      // FAQ Filter & Search
+      let activeCat = 'all';
+      const faqItems = Array.from(document.querySelectorAll('#faq-list .faq-item'));
+      function filterFaq() {
+        const kw = ($('faq-search').value || '').trim().toLowerCase();
+        faqItems.forEach((el) => {
+          const catOk = activeCat === 'all' || el.dataset.cat === activeCat;
+          const kwOk = !kw || el.textContent.toLowerCase().includes(kw);
+          el.style.display = (catOk && kwOk) ? '' : 'none';
+        });
+      }
+      $('faq-search').addEventListener('input', filterFaq);
+      document.querySelectorAll('#faq-tags .faq-tag').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#faq-tags .faq-tag').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeCat = btn.dataset.cat;
+          filterFaq();
+        });
+      });
+
+      // Scroll Spy for TOC
+      const tocLinks = Array.from(document.querySelectorAll('.toc-list a'));
+      const sections = tocLinks.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tocLinks.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+            }
+          });
+        },
+        { rootMargin: '-20% 0px -70% 0px' }
+      );
+      sections.forEach((s) => observer.observe(s));
+
+      renderGenerator();
+      loadChecks();
+    })();
+  </script>
+</body>
+</html>
